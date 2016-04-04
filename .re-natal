@@ -1,0 +1,10 @@
+{
+  "name": "NavigatorCljs",
+  "interface": "reagent",
+  "androidHost": "localhost",
+  "iosHost": "172.29.147.28",
+  "modules": [],
+  "imageDirs": [
+    "images"
+  ]
+}
