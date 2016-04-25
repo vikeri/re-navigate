@@ -1,10 +1,14 @@
 {
   "name": "NavigatorCljs",
-  "interface": "reagent",
+  "interface": "reagent6",
   "androidHost": "localhost",
-  "iosHost": "172.29.147.28",
+  "iosHost": "localhost",
   "modules": [],
   "imageDirs": [
     "images"
-  ]
+  ],
+  "envRoots": {
+    "dev": "env/dev",
+    "prod": "env/prod"
+  }
 }

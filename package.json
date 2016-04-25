@@ -7,6 +7,6 @@
   },
   "dependencies": {
     "react": "^0.14.8",
-    "react-native": "facebook/react-native#master"
+    "react-native": "0.24.0"
   }
 }

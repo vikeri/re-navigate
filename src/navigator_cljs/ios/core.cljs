@@ -4,40 +4,81 @@
             [navigator-cljs.handlers]
             [navigator-cljs.subs]))
 
-(set! js/window.React (js/require "react-native"))
+(def react-native (js/require "react-native"))
 
-(def app-registry (.-AppRegistry js/React))
-(def text (r/adapt-react-class (.-Text js/React)))
-(def view (r/adapt-react-class (.-View js/React)))
-(def image (r/adapt-react-class (.-Image js/React)))
-(def touchable-highlight (r/adapt-react-class (.-TouchableHighlight js/React)))
-(def card-stack (r/adapt-react-class (.-CardStack (.-NavigationExperimental js/React))))
+(def app-registry (.-AppRegistry react-native))
+(def text (r/adapt-react-class (.-Text react-native)))
+(def view (r/adapt-react-class (.-View react-native)))
+(def image (r/adapt-react-class (.-Image react-native)))
+(def touchable-highlight (r/adapt-react-class (.-TouchableHighlight react-native)))
+(def card-stack (r/adapt-react-class (.-CardStack (.-NavigationExperimental react-native))))
+(def navigation-header-comp (.-Header (.-NavigationExperimental react-native)))
+(def navigation-header (r/adapt-react-class navigation-header-comp))
+(def header-title (r/adapt-react-class (.-Title (.-Header (.-NavigationExperimental react-native)))))
 
 (.log js/console card-stack)
 
 (def logo-img (js/require "./images/cljs.png"))
 
-(defn alert [title]
-  (.alert (.-Alert js/React) title))
+(def style
+  {:view        {:flex-direction "column"
+                 :margin         40
+                 :margin-top     (.-HEIGHT navigation-header-comp)
+                 :align-items    "center"}
+   :title       {:font-size     30
+                 :font-weight   "100"
+                 :margin-bottom 20
+                 :text-align    "center"}
+   :button-text {:color       "white"
+                 :text-align  "center"
+                 :font-weight "bold"}
+   :image       {:width         80
+                 :height        80
+                 :margin-bottom 30}
+   :button      {:background-color "#999"
+                 :padding          10
+                 :margin-bottom    10
+                 :border-radius    5}})
 
-(defn scene [_]
-  (r/reactify-component
-    [view {:style {:flex-direction "column" :margin 40 :align-items "center"}}
-     [text {:style {:font-size 30 :font-weight "100" :margin-bottom 20 :text-align "center"}} "Hello"]
+
+(defn nav-title [props]
+  (.log js/console "props" props)
+  [header-title (aget props "scene" "navigationState" "title")])
+
+(defn header
+  [props]
+  [navigation-header
+   (assoc
+     (js->clj props)
+     :render-title-component #(r/as-element (nav-title %)))])
+
+(defn scene [props]
+  (.log js/console props)
+  (let [idx (aget props "scene" "index")
+        next-title (str "Route " (inc idx))
+        next-key (keyword (str idx))]
+    [view {:style (:view style)}
+     [text {:style (:title style)} (str "Hello #" idx)]
      [image {:source logo-img
-             :style  {:width 80 :height 80 :margin-bottom 30}}]
-     [touchable-highlight {:style    {:background-color "#999" :padding 10 :border-radius 5}
-                           :on-press #(alert "HELLO!")}
-      [text {:style {:color "white" :text-align "center" :font-weight "bold"}} "press me"]]]))
+             :style  (:image style)}]
+     [touchable-highlight
+      {:style    (:button style)
+       :on-press #(dispatch [:nav/push {:key   next-key
+                                        :title next-title}])}
+      [text {:style (:button-text style)} "Next route"]]
+     [touchable-highlight
+      {:style    (:button style)
+       :on-press #(dispatch [:nav/home nil])}
+      [text {:style (:button-text style)} "Go home"]]]))
 
 (defn app-root []
-  (let [greeting (subscribe [:get-greeting])]
+  (let [nav (subscribe [:nav/state])]
     (fn []
-      [card-stack {:on-navigate      #(.alert (.-Alert js/React) "nav")
-                   :navigation-state {:index    0
-                                      :key      :home
-                                      :children [{:key :first-route}]}
-                   :render-scene     scene}])))
+      [card-stack {:on-navigate      #(dispatch [:nav/pop nil])
+                   :render-overlay   #(r/as-element (header %))
+                   :navigation-state @nav
+                   :style            {:flex 1}
+                   :render-scene     #(r/as-element (scene %))}])))
 
 (defn init []
   (dispatch-sync [:initialize-db])

@@ -27,7 +27,7 @@ project.xcworkspace
 .idea
 .gradle
 local.properties
-
+*.iml
 # node.js
 #
 node_modules/
@@ -42,3 +42,9 @@ target/
 # Figwheel
 #
 figwheel_server.log
+
+# BUCK
+buck-out/
+\.buckd/
+android/app/libs
+android/keystores/debug.keystore
