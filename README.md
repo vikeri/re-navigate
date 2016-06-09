@@ -1,6 +1,8 @@
 # re-navigate
 > Example of React Native Navigation with [re-frame](https://github.com/Day8/re-frame)/[re-natal](https://github.com/drapanjanas/re-natal/)
 
+**WARNING: The API of NavigationExperimental has been changing a lot lately and this code may not work with the latest RN versions. I will update as soon as the API stabilizes**
+
 This example uses React Native's new Navigation component [NavigationExperimental](https://github.com/ericvicenti/navigation-rfc) which has a more FRP-like setup (like redux) and thus it works ridiculously well with [re-frame](https://github.com/Day8/re-frame).
 
 ## Example code
