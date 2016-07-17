@@ -43,14 +43,15 @@
 
 (defn nav-title [props]
   (.log js/console "props" props)
-  [header-title (aget props "scene" "navigationState" "title")])
+  [header-title (aget props "scene" "route" "title")])
 
 (defn header
   [props]
   [navigation-header
    (assoc
      (js->clj props)
-     :render-title-component #(r/as-element (nav-title %)))])
+     :render-title-component #(r/as-element (nav-title %))
+     :on-navigate-back #(dispatch [:nav/pop nil]))])
 
 (defn scene [props]
   (.log js/console props)
@@ -74,7 +75,7 @@
 (defn app-root []
   (let [nav (subscribe [:nav/state])]
     (fn []
-      [card-stack {:on-navigate      #(dispatch [:nav/pop nil])
+      [card-stack {:on-navigate-back #(dispatch [:nav/pop nil])
                    :render-overlay   #(r/as-element (header %))
                    :navigation-state @nav
                    :style            {:flex 1}
