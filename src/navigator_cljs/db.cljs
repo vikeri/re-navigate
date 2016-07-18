@@ -2,22 +2,20 @@
   (:require [schema.core :as s :include-macros true]))
 
 
-(def NavigationState
+(def NavigationRoute
   {:key s/Keyword
-   :title s/Str
-   s/Keyword s/Any})
+   :title s/Str})
 
-(def NavigationParentState
-  (dissoc
-    (merge NavigationState
-           {:index    s/Int
-            :children [NavigationState]})
-    :title))
+(def NavigationState
+ {:index s/Int
+  :routes [NavigationRoute]
+  :key s/Keyword})
 
 ;; schema of app-db
-(def schema {:nav NavigationParentState})
+(def schema {:nav NavigationState})
+
 ;; initial state of app-db
 (def app-db {:nav {:index    0
                    :key      :home
-                   :children [{:key :first-route
-                               :title "First route"}]}})
+                   :routes [{:key :first-route
+                             :title "First route"}]}})

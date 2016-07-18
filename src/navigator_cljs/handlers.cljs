@@ -22,8 +22,8 @@
 (defn check-and-throw
   "throw an exception if db doesn't match the schema."
   [a-schema db]
-    (if-let [problems (s/check a-schema db)]
-      (throw (js/Error. (str "schema check failed: " problems)))))
+  (if-let [problems (s/check a-schema db)]
+    (throw (js/Error. (str "schema check failed: " problems)))))
 
 (def validate-schema-mw
   (after (partial check-and-throw schema)))
@@ -43,7 +43,7 @@
   (fn [db [_ value]]
     (-> db
         (update-in [:nav :index] inc)
-        (update-in [:nav :children] #(conj % value)))))
+        (update-in [:nav :routes] #(conj % value)))))
 
 (register-handler
   :nav/pop
@@ -51,7 +51,7 @@
   (fn [db [_ _]]
     (-> db
         (update-in [:nav :index] dec-to-zero)
-        (update-in [:nav :children] pop))))
+        (update-in [:nav :routes] pop))))
 
 (register-handler
   :nav/home
@@ -59,4 +59,4 @@
   (fn [db [_ _]]
     (-> db
         (assoc-in [:nav :index] 0)
-        (assoc-in [:nav :children] (vector (get-in db [:nav :children 0]))))))
+        (assoc-in [:nav :routes] (vector (get-in db [:nav :routes 0]))))))
