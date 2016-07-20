@@ -32,7 +32,7 @@ npm install && lein prod-build && react-native run-ios
 
 In the future this might become a library if it would be useful to reuse things like the [navigation handlers](src/navigator_cljs/handlers.cljs#L40-L62) and the [db schema](src/navigator_cljs/db.cljs#L5-L15).
 
-It has only been tested with iOS but in theory it should work with Android as well since there are no iOS-specific components (I think).
+It has been tested on both Android and iOS.
 
 ## Contributors
 
