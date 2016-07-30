@@ -40,7 +40,6 @@
                  :margin-bottom    10
                  :border-radius    5}})
 
-
 (defn nav-title [props]
   (.log js/console "props" props)
   [header-title (aget props "scene" "route" "title")])

@@ -28,7 +28,7 @@ npm install && lein prod-build && react-native run-ios
 ## Notes
 
 - React (15.2.1)
-- React Native (0.29.1)
+- React Native (0.31.0)
 
 In the future this might become a library if it would be useful to reuse things like the [navigation handlers](src/navigator_cljs/handlers.cljs#L40-L62) and the [db schema](src/navigator_cljs/db.cljs#L5-L15).
 

@@ -1,11 +1,10 @@
 (ns navigator-cljs.handlers
   (:require
     [re-frame.core :refer [register-handler after]]
-    [schema.core :as s :include-macros true]
-    [navigator-cljs.db :refer [app-db schema]]))
+    [cljs.spec :as s]
+    [navigator-cljs.db :as db :refer [app-db]]))
 
-;; -- Helpers
-;; ------------------------------------------------------------
+;; -- Helpers --------------------------------------------------------------
 
 (defn dec-to-zero
   "Same as dec if not zero"
@@ -14,32 +13,33 @@
     (dec arg)
     arg))
 
-
 ;; -- Middleware ------------------------------------------------------------
 ;;
 ;; See https://github.com/Day8/re-frame/wiki/Using-Handler-Middleware
 ;;
 (defn check-and-throw
-  "throw an exception if db doesn't match the schema."
-  [a-schema db]
-  (if-let [problems (s/check a-schema db)]
-    (throw (js/Error. (str "schema check failed: " problems)))))
+  "Throw an exception if db doesn't have a valid spec."
+  [spec db]
+  (when-not (s/valid? spec db)
+    (let [explain-data (s/explain-data spec db)]
+      (throw (ex-info (str "Spec check failed: " explain-data) explain-data)))))
 
-(def validate-schema-mw
-  (after (partial check-and-throw schema)))
+(def validate-spec-mw
+  (if goog.DEBUG
+    (after (partial check-and-throw ::db/app-db))
+    []))
 
 ;; -- Handlers --------------------------------------------------------------
 
-
 (register-handler
   :initialize-db
-  validate-schema-mw
+  validate-spec-mw
   (fn [_ _]
     app-db))
 
 (register-handler
   :nav/push
-  validate-schema-mw
+  validate-spec-mw
   (fn [db [_ value]]
     (-> db
         (update-in [:nav :index] inc)
@@ -47,7 +47,7 @@
 
 (register-handler
   :nav/pop
-  validate-schema-mw
+  validate-spec-mw
   (fn [db [_ _]]
     (-> db
         (update-in [:nav :index] dec-to-zero)
@@ -55,7 +55,7 @@
 
 (register-handler
   :nav/home
-  validate-schema-mw
+  validate-spec-mw
   (fn [db [_ _]]
     (-> db
         (assoc-in [:nav :index] 0)
