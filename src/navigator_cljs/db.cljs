@@ -1,18 +1,19 @@
 (ns navigator-cljs.db
-  (:require [schema.core :as s :include-macros true]))
+  (:require [cljs.spec :as s]))
 
+(s/def ::index integer?)
+(s/def ::key keyword?)
+(s/def ::title string?)
 
-(def NavigationRoute
-  {:key s/Keyword
-   :title s/Str})
+(s/def ::route (s/keys :req-un [::key
+                                ::title]))
+(s/def ::routes (s/* ::route))
 
-(def NavigationState
- {:index s/Int
-  :routes [NavigationRoute]
-  :key s/Keyword})
+(s/def ::nav (s/keys :req-un [::index
+                              ::key
+                              ::routes]))
 
-;; schema of app-db
-(def schema {:nav NavigationState})
+(s/def ::app-db (s/keys :req-un [::nav]))
 
 ;; initial state of app-db
 (def app-db {:nav {:index    0

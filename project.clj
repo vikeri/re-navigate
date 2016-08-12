@@ -3,11 +3,10 @@
             :url "http://example.com/FIXME"
             :license {:name "Eclipse Public License"
                       :url  "http://www.eclipse.org/legal/epl-v10.html"}
-            :dependencies [[org.clojure/clojure "1.7.0"]
-                           [org.clojure/clojurescript "1.7.170"]
-                           [reagent "0.6.0-alpha" :exclusions [cljsjs/react cljsjs/react-dom cljsjs/react-dom-server]]
-[re-frame "0.7.0"]
-[prismatic/schema "1.0.4"]]
+            :dependencies [[org.clojure/clojure "1.9.0-alpha10"]
+                           [org.clojure/clojurescript "1.9.89"]
+                           [reagent "0.6.0-rc" :exclusions [cljsjs/react cljsjs/react-dom cljsjs/react-dom-server]]
+[re-frame "0.7.0"]]
             :plugins [[lein-cljsbuild "1.1.1"]
                       [lein-figwheel "0.5.0-6"]]
             :clean-targets ["target/" "index.ios.js" "index.android.js"]
@@ -35,10 +34,16 @@
                                                              :compiler     {:output-to     "index.ios.js"
                                                                             :main          "env.ios.main"
                                                                             :output-dir    "target/ios"
-                                                                            :optimizations :simple}}
+                                                                            :static-fns    true
+                                                                            :optimize-constants true
+                                                                            :optimizations :simple
+                                                                            :closure-defines {"goog.DEBUG" false}}}
                                                    :android {:source-paths ["src" "env/prod"]
                                                              :compiler     {:output-to     "index.android.js"
                                                                             :main          "env.android.main"
                                                                             :output-dir    "target/android"
-                                                                            :optimizations :simple}}}}
+                                                                            :static-fns    true
+                                                                            :optimize-constants true
+                                                                            :optimizations :simple
+                                                                            :closure-defines {"goog.DEBUG" false}}}}}
                               }})

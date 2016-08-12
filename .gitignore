@@ -44,6 +44,11 @@ target/
 #
 figwheel_server.log
 
+# Other
+#
+.nrepl-port
+.lein-repl-history
+
 # BUCK
 #
 buck-out/
