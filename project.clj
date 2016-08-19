@@ -6,7 +6,7 @@
             :dependencies [[org.clojure/clojure "1.9.0-alpha10"]
                            [org.clojure/clojurescript "1.9.89"]
                            [reagent "0.6.0-rc" :exclusions [cljsjs/react cljsjs/react-dom cljsjs/react-dom-server]]
-[re-frame "0.7.0"]]
+                           [re-frame "0.8.0"]]
             :plugins [[lein-cljsbuild "1.1.1"]
                       [lein-figwheel "0.5.0-6"]]
             :clean-targets ["target/" "index.ios.js" "index.android.js"]
@@ -45,5 +45,4 @@
                                                                             :static-fns    true
                                                                             :optimize-constants true
                                                                             :optimizations :simple
-                                                                            :closure-defines {"goog.DEBUG" false}}}}}
-                              }})
+                                                                            :closure-defines {"goog.DEBUG" false}}}}}}})
