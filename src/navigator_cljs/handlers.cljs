@@ -1,6 +1,6 @@
 (ns navigator-cljs.handlers
   (:require
-    [re-frame.core :refer [register-handler after]]
+    [re-frame.core :refer [reg-event-db after]]
     [cljs.spec :as s]
     [navigator-cljs.db :as db :refer [app-db]]))
 
@@ -31,13 +31,13 @@
 
 ;; -- Handlers --------------------------------------------------------------
 
-(register-handler
+(reg-event-db
   :initialize-db
   validate-spec-mw
   (fn [_ _]
     app-db))
 
-(register-handler
+(reg-event-db
   :nav/push
   validate-spec-mw
   (fn [db [_ value]]
@@ -45,7 +45,7 @@
         (update-in [:nav :index] inc)
         (update-in [:nav :routes] #(conj % value)))))
 
-(register-handler
+(reg-event-db
   :nav/pop
   validate-spec-mw
   (fn [db [_ _]]
@@ -53,7 +53,7 @@
         (update-in [:nav :index] dec-to-zero)
         (update-in [:nav :routes] pop))))
 
-(register-handler
+(reg-event-db
   :nav/home
   validate-spec-mw
   (fn [db [_ _]]
