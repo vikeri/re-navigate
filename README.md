@@ -36,6 +36,8 @@ It has been tested on both Android and iOS.
 
 ## Contributors
 
-[Viktor Eriksson](https://github.com/vikeri)
+Viktor Eriksson ([vikeri](https://github.com/vikeri))
 
-[Anthony Mittaz](https://github.com/sync)
+Anthony Mittaz ([sync](https://github.com/sync))
+
+Sam Liu ([wind13](https://github.com/wind13))
