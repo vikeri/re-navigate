@@ -49,7 +49,7 @@
   [navigation-header
    (assoc
      (js->clj props)
-     :render-title-component #(r/as-element (nav-title %))
+     :render-title-component #(r/as-element [nav-title %])
      :on-navigate-back #(dispatch [:nav/pop nil]))])
 
 (defn scene [props]
@@ -75,7 +75,7 @@
   (let [nav (subscribe [:nav/state])]
     (fn []
       [card-stack {:on-navigate-back #(dispatch [:nav/pop nil])
-                   :render-overlay   #(r/as-element (header %))
+                   :render-header   #(r/as-element (header %))
                    :navigation-state @nav
                    :style            {:flex 1}
                    :render-scene     #(r/as-element (scene %))}])))
