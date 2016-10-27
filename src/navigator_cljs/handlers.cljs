@@ -13,6 +13,12 @@
     (dec arg)
     arg))
 
+(defn current-route-key
+  "Gets the current route key"
+  [db]
+  (let [idx (get-in db [:nav :index])]
+    (get-in db [:nav :routes idx :key])))
+
 ;; -- Middleware ------------------------------------------------------------
 ;;
 ;; See https://github.com/Day8/re-frame/wiki/Using-Handler-Middleware
@@ -41,9 +47,11 @@
   :nav/push
   validate-spec-mw
   (fn [db [_ value]]
-    (-> db
-        (update-in [:nav :index] inc)
-        (update-in [:nav :routes] #(conj % value)))))
+    (if-not (= (current-route-key db) (:key value))
+      (-> db
+          (update-in [:nav :index] inc)
+          (update-in [:nav :routes] #(conj % value)))
+      db)))
 
 (reg-event-db
   :nav/pop
