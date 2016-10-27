@@ -1,11 +1,11 @@
 (defproject navigator-cljs "0.1.0-SNAPSHOT"
-            :description "FIXME: write description"
-            :url "http://example.com/FIXME"
+            :description "Example of React Native Navigation with re-frame"
+            :url "https://github.com/vikeri/re-navigate"
             :license {:name "Eclipse Public License"
                       :url  "http://www.eclipse.org/legal/epl-v10.html"}
-            :dependencies [[org.clojure/clojure "1.9.0-alpha10"]
-                           [org.clojure/clojurescript "1.9.89"]
-                           [reagent "0.6.0-rc" :exclusions [cljsjs/react cljsjs/react-dom cljsjs/react-dom-server]]
+            :dependencies [[org.clojure/clojure "1.9.0-alpha13"]
+                           [org.clojure/clojurescript "1.9.293"]
+                           [reagent "0.6.0" :exclusions [cljsjs/react cljsjs/react-dom cljsjs/react-dom-server]]
                            [re-frame "0.8.0"]]
             :plugins [[lein-cljsbuild "1.1.1"]
                       [lein-figwheel "0.5.0-6"]]
