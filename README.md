@@ -1,3 +1,8 @@
+## MIGHT SOON BE DEPRECATED
+
+It seems that there is a more complete navigation solution coming to React Native from official sources. This still works for smaller projects but if you are starting something bigger I'd wait.
+https://github.com/exponent/ex-navigation#an-important-note-about-the-future
+
 # re-navigate
 > Example of React Native Navigation with [re-frame](https://github.com/Day8/re-frame)/[re-natal](https://github.com/drapanjanas/re-natal/)
 
