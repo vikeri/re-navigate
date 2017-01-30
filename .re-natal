@@ -3,7 +3,9 @@
   "interface": "reagent6",
   "androidHost": "localhost",
   "iosHost": "localhost",
-  "modules": [],
+  "modules": [
+    "react-navigation"
+  ],
   "imageDirs": [
     "images"
   ],
