@@ -1,4 +1,4 @@
-package com.navigatorcljs;
+package com.renavigate;
 
 import com.facebook.react.ReactActivity;
 
@@ -10,6 +10,6 @@ public class MainActivity extends ReactActivity {
      */
     @Override
     protected String getMainComponentName() {
-        return "NavigatorCljs";
+        return "ReNavigate";
     }
 }

@@ -1,4 +1,4 @@
-package com.navigatorcljs;
+package com.renavigate;
 
 import android.app.Application;
 import android.util.Log;

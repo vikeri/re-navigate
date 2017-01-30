@@ -1,16 +1,14 @@
 {
-  "name": "NavigatorCljs",
+  "name": "ReNavigate",
   "interface": "reagent6",
   "androidHost": "localhost",
   "iosHost": "localhost",
-  "modules": [
-    "react-navigation"
-  ],
-  "imageDirs": [
-    "images"
-  ],
   "envRoots": {
     "dev": "env/dev",
     "prod": "env/prod"
-  }
+  },
+  "modules": [],
+  "imageDirs": [
+    "images"
+  ]
 }

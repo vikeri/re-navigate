@@ -1,5 +1,5 @@
  (ns env.ios.main
-  (:require [navigator-cljs.ios.core :as core]))
+  (:require [re-navigate.ios.core :as core]))
 
  (core/init)
 

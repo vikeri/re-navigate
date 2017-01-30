@@ -1,6 +1,6 @@
-(ns navigator-cljs.core-test
+(ns re-navigate.core-test
   (:require [clojure.test :refer :all]
-            [navigator-cljs.core :refer :all]))
+            [re-navigate.core :refer :all]))
 
 (deftest a-test
   (testing "FIXME, I fail."
