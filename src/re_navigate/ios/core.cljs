@@ -40,7 +40,8 @@
    })
 
 (defn resd [props]
-  (let [number (-> props (get "params") (get "number"))]
+  (let [number (-> props (get "params") (get "number"))
+        route-name "Index"]
     [view {:style {:align-items      "center"
                    :justify-content  "center"
                    :flex             1
@@ -52,13 +53,20 @@
       {:style    (style :button)
        :on-press #(dispatch
                     [:nav/navigate
-                     #:nav.route {:key       (keyword (str number))
-                                  :routeName :Card
-                                  :params    {:number (inc number)}}])}
+                     [#:nav.route {:key       (keyword (str number))
+                                   :routeName :Card
+                                   :params    {:number (inc number)}}
+                      route-name]])}
       [text {:style (style :button-text)} "Next"]]
-     [touchable-highlight {:on-press #(dispatch [:nav/reset])
+     [touchable-highlight {:on-press #(dispatch [:nav/reset route-name])
                            :style    (style :button)}
       [text {:style (style :button-text)} "RESET"]]]))
+
+(defn settings []
+  [view {:style {:flex 1
+                 :justify-content "center"
+                 :align-items "center"}}
+   [text "SETTINGS"]])
 
 
 
@@ -74,9 +82,10 @@
    [touchable-highlight {:style    (style :button)
                          :on-press #(dispatch
                                       [:nav/navigate
-                                       #:nav.route {:key       :0
-                                                    :routeName :Card
-                                                    :params    {:number 1}}])}
+                                       [#:nav.route {:key       :0
+                                                     :routeName :Card
+                                                     :params    {:number 1}}
+                                        "Index"]])}
     [text {:style (style :button-text)} "press me"]]])
 
 
@@ -84,6 +93,7 @@
   (let [comp (r/reactify-component
                (fn [{:keys [navigation]}]
                  [component (-> navigation .-state js->clj)]))]
+    (aset comp "navigationOptions" #js {"title" title})
     comp))
 
 
@@ -92,9 +102,24 @@
 
 (def app-root-comp (nav-wrapper app-root "Welcome"))
 
-(def tab-router {:Index    {:screen app-root-comp}
-                 :Settings {:screen resd-comp}})
+(def stack-router {:Home {:screen app-root-comp}
+                   :Card {:screen resd-comp}})
 
+
+(def sn (r/adapt-react-class (stack-navigator (clj->js stack-router))))
+
+(defn card-start [] (let [nav-state (subscribe [:nav/stack-state "Index"])]
+                      (fn []
+                        (js/console.log @nav-state)
+                        [sn {:navigation (add-navigation-helpers
+                                           (clj->js
+                                             {"dispatch" #(do
+                                                            (js/console.log "EVENT" %)
+                                                            (dispatch [:nav/js [% "Index"]]))
+                                              "state"    (clj->js @nav-state)}))}])))
+
+(def tab-router {:Index    {:screen (nav-wrapper card-start "Index")}
+                 :Settings {:screen (nav-wrapper settings "Settings")}})
 (def tab-navigator-inst
   (tab-navigator (clj->js tab-router) (clj->js {:order            ["Index" "Settings"]
                                                 :initialRouteName "Index"})))
@@ -108,7 +133,7 @@
   (r/adapt-react-class tab-navigator-inst))
 
 (defn start []
-  (let [nav-state (subscribe [:nav/state])]
+  (let [nav-state (subscribe [:nav/tab-state])]
     (fn []
       [tn {:navigation (add-navigation-helpers
                          #js {"dispatch" #(dispatch [:nav/set (get-state %)])

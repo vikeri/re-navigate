@@ -38,18 +38,24 @@
 (reg-event-db
   :nav/navigate
   validate-spec
-  (fn [db [_ value]]
+  (fn [db [_ [value route-name]]]
     (-> db
-        (update-in [:nav/state :nav.state/routes] #(conj % value))
-        (update-in [:nav/state :nav.state/index] inc))))
+        (update-in [:nav/stack-state
+                    (keyword "nav.routeName" route-name)
+                    :nav.state/routes]
+                   #(conj % value))
+        (update-in [:nav/stack-state
+                    (keyword "nav.routeName" route-name)
+                    :nav.state/index]
+                   inc))))
 
 (defn nav-val->route
-  [nav-val]
+  [nav-val route-name]
   (let [route-name (.-routeName nav-val)
         params     (.-params nav-val)]
-    (merge #:nav.route{:routeName (keyword route-name)
-                       :key       (->> route-name (str "scene_") keyword)}
-           (if params {:nav.route/params params}))))
+    [(merge #:nav.route{:routeName (keyword route-name)
+                        :key       (->> route-name (str "scene_") keyword)}
+            (if params {:nav.route/params params})) route-name]))
 
 (defn tab-val->route
   [nav-val]
@@ -62,19 +68,21 @@
 (reg-event-db
   :nav/back
   validate-spec
-  (fn [db _]
-    (-> db
-        (update-in [:nav/state :nav.state/index] dec-to-zero)
-        (update-in [:nav/state :nav.state/routes] pop))))
+  (fn [db [_ route-name]]
+    (let [route-key (keyword "nav.routeName" route-name)]
+      (-> db
+          (update-in [:nav/stack-state route-key :nav.state/index] dec-to-zero)
+          (update-in [:nav/stack-state route-key :nav.state/routes] pop)))))
 
 (reg-event-db
   :nav/reset
   validate-spec
-  (fn [db _]
-    (let [first-route (-> db :nav/state :nav.state/routes first)]
+  (fn [db [_ route-name]]
+    (let [route-key (keyword "nav.routeName" route-name)
+          first-route (-> db :nav/stack-state route-key :nav.state/routes first)]
       (-> db
-          (assoc-in [:nav/state :nav.state/routes] [first-route])
-          (assoc-in [:nav/state :nav.state/index] 0)))))
+          (assoc-in [:nav/stack-state route-key :nav.state/routes] [first-route])
+          (assoc-in [:nav/stack-state route-key :nav.state/index] 0)))))
 
 (defn position
   [pred coll]
@@ -88,19 +96,19 @@
   :nav/set-tab
   validate-spec
   (fn [db [_ tab]]
-    (let [old-idx (get-in db [:nav/state :nav.state/index])
+    (let [old-idx (get-in db [:nav/tab-state :nav.state/index])
           idx     (position #(do
                                (= tab (name (:nav.route/routeName %))))
-                            (get-in db [:nav/state :nav.state/routes]))]
+                            (get-in db [:nav/tab-state :nav.state/routes]))]
       (js/console.log (js/Date.) "SETTING TAB " tab idx old-idx)
-      (assoc-in db [:nav/state :nav.state/index] idx))))
+      (assoc-in db [:nav/tab-state :nav.state/index] idx))))
 
 (reg-event-db
   :nav/set
   validate-spec
   (fn [db [_ nav]]
     (js/console.log "GOT NAV" nav)
-    (assoc-in db [:nav/state :nav.state/index] (.-index nav))))
+    (assoc-in db [:nav/tab-state :nav.state/index] (.-index nav))))
 
 (reg-event-fx
   :nav/js-tab
@@ -116,9 +124,10 @@
 (reg-event-fx
   :nav/js
   validate-spec
-  (fn [{:keys [db]} [_ nav-val]]
+  (fn [{:keys [db]} [_ [nav-val route-name]]]
+    (js/console.log [nav-val route-name])
     (js/console.log "JS NAV" (js->clj nav-val))
     {:dispatch (case (.-type nav-val)
-                 "Back" [:nav/back]
-                 "Navigate" [:nav/navigate (nav-val->route nav-val)])
+                 "Back" [:nav/back route-name]
+                 "Navigate" [:nav/navigate (nav-val->route nav-val route-name)])
      :db       db}))

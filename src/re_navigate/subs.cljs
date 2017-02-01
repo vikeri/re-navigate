@@ -2,6 +2,11 @@
   (:require [re-frame.core :refer [reg-sub]]))
 
 (reg-sub
-  :nav/state
+  :nav/tab-state
   (fn [db _]
-    (:nav/state db)))
+    (:nav/tab-state db)))
+
+(reg-sub
+  :nav/stack-state
+  (fn [db [_ route-name]]
+    (get-in db [:nav/stack-state (keyword "nav.routeName" route-name)])))

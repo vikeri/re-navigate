@@ -13,11 +13,13 @@
                           :opt [:nav.route/path :nav.route/params]))
 (s/def :nav.state/routes (s/coll-of :nav/route :kind vector?))
 (s/def :nav.state/index integer?)
-(s/def :nav/state (s/keys :req [:nav.state/index :nav.state/routes]))
+(s/def :nav/tab-state (s/keys :req [:nav.state/index :nav.state/routes]))
 (s/def ::app-db
-  (s/keys :req [:nav/state]))
+  (s/keys :req [:nav/tab-state]))
 
 ;; initial state of app-db
-(def app-db {:nav/state #:nav.state{:index  0
-                                    :routes [#:nav.route{:key :IndexKey :routeName :Index}
-                                             #:nav.route{:key :SettingsKey :routeName :Settings}]}})
+(def app-db {:nav/tab-state   #:nav.state{:index  0
+                                          :routes [#:nav.route{:key :IndexKey :routeName :Index}
+                                                   #:nav.route{:key :SettingsKey :routeName :Settings}]}
+             :nav/stack-state #:nav.routeName {:Index #:nav.state {:index  0
+                                                                   :routes [#:nav.route {:key :Home :routeName :Home}]}}})
