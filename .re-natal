@@ -8,6 +8,7 @@
     "prod": "env/prod"
   },
   "modules": [
+    "react-navigation",
     "react-navigation"
   ],
   "imageDirs": [

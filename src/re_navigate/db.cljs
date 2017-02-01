@@ -3,6 +3,7 @@
 
 ;; spec of app-db
 ;; Fetched from: https://github.com/react-community/react-navigation/blob/c37ad8a0a924d13f3897bc72fbda52aac76904b6/src/TypeDefinition.js
+
 (s/def :nav.route/key keyword?)
 (s/def :nav.route/routeName keyword?)
 (s/def :nav.route/path keyword?)
@@ -17,5 +18,6 @@
   (s/keys :req [:nav/state]))
 
 ;; initial state of app-db
-(def app-db {:nav/state #:nav.state{:index 0
-                                    :routes [#:nav.route{:key :Init :routeName :Home}]}})
+(def app-db {:nav/state #:nav.state{:index  0
+                                    :routes [#:nav.route{:key :IndexKey :routeName :Index}
+                                             #:nav.route{:key :SettingsKey :routeName :Settings}]}})

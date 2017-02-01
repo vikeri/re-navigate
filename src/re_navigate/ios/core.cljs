@@ -24,9 +24,6 @@
   []
   (js* "'#'+('00000'+(Math.random()*(1<<24)|0).toString(16)).slice(-6)"))
 
-(defn alert [title]
-  (.alert (.-Alert ReactNative) title))
-
 (def style
   {
    :title       {:font-size   30
@@ -63,6 +60,8 @@
                            :style    (style :button)}
       [text {:style (style :button-text)} "RESET"]]]))
 
+
+
 (defn app-root [{:keys [navigation]}]
   [view {:style {:flex-direction   "column"
                  :flex             1
@@ -85,7 +84,6 @@
   (let [comp (r/reactify-component
                (fn [{:keys [navigation]}]
                  [component (-> navigation .-state js->clj)]))]
-    (aset comp "navigationOptions" #js {"title" title})
     comp))
 
 
@@ -94,17 +92,29 @@
 
 (def app-root-comp (nav-wrapper app-root "Welcome"))
 
-(def router {:Home {:screen app-root-comp}
-             :Card {:screen resd-comp}})
+(def tab-router {:Index    {:screen app-root-comp}
+                 :Settings {:screen resd-comp}})
 
-(def sn (r/adapt-react-class (stack-navigator (clj->js router))))
+(def tab-navigator-inst
+  (tab-navigator (clj->js tab-router) (clj->js {:order            ["Index" "Settings"]
+                                                :initialRouteName "Index"})))
 
-(defn start [] (let [nav-state (subscribe [:nav/state])]
-                 (fn []
-                   [sn {:navigation (add-navigation-helpers
-                                      (clj->js
-                                        {"dispatch" #(dispatch [:nav/js %])
-                                         "state"    (clj->js @nav-state)}))}])))
+(defn get-state [action]
+  (-> tab-navigator-inst
+      .-router
+      (.getStateForAction action)))
+
+(def tn
+  (r/adapt-react-class tab-navigator-inst))
+
+(defn start []
+  (let [nav-state (subscribe [:nav/state])]
+    (fn []
+      [tn {:navigation (add-navigation-helpers
+                         #js {"dispatch" #(dispatch [:nav/set (get-state %)])
+                              "state"    (clj->js @nav-state)})}])
+    )
+  )
 
 (defn init []
   (dispatch-sync [:initialize-db])
