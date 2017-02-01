@@ -120,24 +120,31 @@
 
 (def tab-router {:Index    {:screen (nav-wrapper card-start "Index")}
                  :Settings {:screen (nav-wrapper settings "Settings")}})
-(def tab-navigator-inst
+
+
+
+(defn tab-navigator-inst []
   (tab-navigator (clj->js tab-router) (clj->js {:order            ["Index" "Settings"]
                                                 :initialRouteName "Index"})))
 
 (defn get-state [action]
-  (-> tab-navigator-inst
+  (-> (tab-navigator-inst)
       .-router
       (.getStateForAction action)))
 
-(def tn
-  (r/adapt-react-class tab-navigator-inst))
+(defonce tn
+  (let [tni (tab-navigator-inst)]
+    (aset tni "router" "getStateForAction" #(let [new-state (get-state %)]
+                                              (js/console.log "STATE" % new-state)
+                                                             (dispatch [:nav/set new-state])
+                                                             new-state) #_(do (js/console.log %)
+                                                                                                                                        #_(get-state %)))
+    (r/adapt-react-class tni)))
 
 (defn start []
   (let [nav-state (subscribe [:nav/tab-state])]
     (fn []
-      [tn {:navigation (add-navigation-helpers
-                         #js {"dispatch" #(dispatch [:nav/set (get-state %)])
-                              "state"    (clj->js @nav-state)})}])
+      [tn])
     )
   )
 

@@ -78,7 +78,7 @@
   :nav/reset
   validate-spec
   (fn [db [_ route-name]]
-    (let [route-key (keyword "nav.routeName" route-name)
+    (let [route-key   (keyword "nav.routeName" route-name)
           first-route (-> db :nav/stack-state route-key :nav.state/routes first)]
       (-> db
           (assoc-in [:nav/stack-state route-key :nav.state/routes] [first-route])
