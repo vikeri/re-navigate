@@ -25,9 +25,17 @@ Requirements:
 
 `cd` into the directory.
 
+### iOS
 ```
 yarn && lein prod-build && react-native run-ios
+
 ```
+
+### Android
+```
+yarn && lein prod-build && react-native run-android
+```
+
 
 ## Notes
 
