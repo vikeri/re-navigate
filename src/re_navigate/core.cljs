@@ -1,4 +1,4 @@
-(ns re-navigate.ios.core
+(ns re-navigate.core
   (:require [reagent.core :as r :refer [atom]]
             [re-frame.core :refer [subscribe dispatch dispatch-sync]]
             [re-navigate.events]
