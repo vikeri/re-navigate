@@ -1,5 +1,5 @@
  (ns env.ios.main
-  (:require [re-navigate.ios.core :as core]))
+  (:require [re-navigate.core :as core]))
 
  (core/init)
 

@@ -1,12 +1,12 @@
  (ns ^:figwheel-no-load env.android.main
   (:require [reagent.core :as r]
-            [re-navigate.android.core :as core]
+            [re-navigate.core :as core]
             [figwheel.client :as figwheel :include-macros true]))
 
  (enable-console-print!)
 
 (def cnt (r/atom 0))
-(defn reloader [] @cnt [core/app-root])
+(defn reloader [] @cnt [core/start])
 (def root-el (r/as-element [reloader]))
 
 (figwheel/watch-and-reload

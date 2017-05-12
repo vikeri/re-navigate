@@ -1,6 +1,6 @@
  (ns ^:figwheel-no-load env.ios.main
   (:require [reagent.core :as r]
-            [re-navigate.ios.core :as core]
+            [re-navigate.core :as core]
             [devtools.core :as devtools]
             [figwheel.client :as figwheel :include-macros true]
             ))

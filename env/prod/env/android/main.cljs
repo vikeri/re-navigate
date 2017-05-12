@@ -1,5 +1,5 @@
  (ns env.android.main
-  (:require [re-navigate.android.core :as core]))
+  (:require [re-navigate.core :as core]))
 
  (core/init)
 
